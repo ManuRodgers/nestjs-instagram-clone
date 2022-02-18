@@ -1,0 +1,49 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator nestgraphql {
+  provider               = "node node_modules/prisma-nestjs-graphql"
+  output                 = "../src/@generated/prisma-nestjs-graphql"
+  reExport               = Directories
+  // decorate_1_type        = "CreateOneUserArgs"
+  // decorate_1_field       = data
+  // decorate_1_name        = ValidateNested
+  // decorate_1_from        = "class-validator"
+  // decorate_1_arguments   = "[]"
+  // decorate_2_type        = "CreateOneUserArgs"
+  // decorate_2_field       = data
+  // decorate_2_name        = Type
+  // decorate_2_from        = "class-transformer"
+  // decorate_2_arguments   = "['() => {propertyType.0}']"
+  fields_Validator_from  = "class-validator"
+  fields_Validator_input = true
+  fields_Scalars_from    = "graphql-scalars"
+  fields_Scalars_input   = true
+  fields_Scalars_output  = true
+}
+
+model User {
+  /// @FieldType('Scalars.GraphQLUUID')
+  id        String   @id @default(uuid())
+  /// @HideField({ match: '@(User)Create*Input' })
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  firstName String
+  lastName  String?
+  username  String  @unique
+  /// @Validator.IsEmail()
+  /// @FieldType('Scalars.GraphQLEmailAddress')
+  email     String  @unique
+  /// @HideField({ output: true })
+  password  String
+}
