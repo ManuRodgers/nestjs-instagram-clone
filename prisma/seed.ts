@@ -3,8 +3,7 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('Seeding...');
-  prisma.user.create({
+  const Tim = await prisma.user.create({
     data: {
       username: 'Timmy',
       email: 'tim@gmail.com',
@@ -13,6 +12,7 @@ async function main() {
       password: 'password',
     },
   });
+  console.log('🚀 ~ file: seed.ts ~ line 16 ~ main ~ Tim', Tim);
 }
 
 main()

@@ -2,6 +2,8 @@ import { Field, InputType } from '@nestjs/graphql';
 import { StringFilter } from '../prisma/string-filter.input';
 import { DateTimeFilter } from '../prisma/date-time-filter.input';
 import { StringNullableFilter } from '../prisma/string-nullable-filter.input';
+import * as Scalars from 'graphql-scalars';
+import * as Validator from 'class-validator';
 
 @InputType()
 export class UserWhereInput {
@@ -29,11 +31,12 @@ export class UserWhereInput {
   @Field(() => StringNullableFilter, { nullable: true })
   lastName?: StringNullableFilter;
 
-  @Field(() => StringFilter, { nullable: true })
-  username?: StringFilter;
+  @Field(() => String, { nullable: true })
+  username?: string;
 
-  @Field(() => StringFilter, { nullable: true })
-  email?: StringFilter;
+  @Field(() => Scalars.GraphQLEmailAddress, { nullable: true })
+  @Validator.IsEmail()
+  email?: string;
 
   @Field(() => StringFilter, { nullable: true })
   password?: StringFilter;

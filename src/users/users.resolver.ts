@@ -4,6 +4,7 @@ import {
   CreateOneUserArgs,
   FindManyUserArgs,
 } from 'src/@generated/prisma-nestjs-graphql/user';
+import { SeeProfileUserArgs } from './dto/see-profile-user.args';
 
 import { UsersService } from './users.service';
 
@@ -21,6 +22,13 @@ export class UsersResolver {
   @Query(() => [User], { name: 'users' })
   async findAll(@Args() findManyUserArgs: FindManyUserArgs): Promise<User[]> {
     return this.usersService.findAll(findManyUserArgs);
+  }
+
+  @Query(() => User, { name: 'seeProfile' })
+  async seeProfile(
+    @Args() seeProfileUserArgs: SeeProfileUserArgs,
+  ): Promise<User> {
+    return this.usersService.seeProfile(seeProfileUserArgs);
   }
 
   // @Query(() => User, { name: 'user' })

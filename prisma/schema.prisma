@@ -11,9 +11,9 @@ generator client {
 }
 
 generator nestgraphql {
-  provider               = "node node_modules/prisma-nestjs-graphql"
-  output                 = "../src/@generated/prisma-nestjs-graphql"
-  reExport               = Directories
+  provider                             = "node node_modules/prisma-nestjs-graphql"
+  output                               = "../src/@generated/prisma-nestjs-graphql"
+  reExport                             = Directories
   // decorate_1_type        = "CreateOneUserArgs"
   // decorate_1_field       = data
   // decorate_1_name        = ValidateNested
@@ -24,11 +24,13 @@ generator nestgraphql {
   // decorate_2_name        = Type
   // decorate_2_from        = "class-transformer"
   // decorate_2_arguments   = "['() => {propertyType.0}']"
-  fields_Validator_from  = "class-validator"
-  fields_Validator_input = true
-  fields_Scalars_from    = "graphql-scalars"
-  fields_Scalars_input   = true
-  fields_Scalars_output  = true
+  fields_Validator_from                = "class-validator"
+  fields_Validator_input               = true
+  fields_Scalars_from                  = "graphql-scalars"
+  fields_Scalars_input                 = true
+  fields_Scalars_output                = true
+  useInputType_UserWhereInput_email    = "match:String"
+  useInputType_UserWhereInput_username = "match:String"
 }
 
 model User {
@@ -36,6 +38,7 @@ model User {
   id        String   @id @default(uuid())
   /// @HideField({ match: '@(User)Create*Input' })
   createdAt DateTime @default(now())
+  /// @HideField({ match: '@(User)Create*Input' })
   updatedAt DateTime @updatedAt
 
   firstName String

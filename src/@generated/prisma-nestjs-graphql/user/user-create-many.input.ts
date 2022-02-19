@@ -10,7 +10,7 @@ export class UserCreateManyInput {
   @HideField()
   createdAt?: Date | string;
 
-  @Field(() => Date, { nullable: true })
+  @HideField()
   updatedAt?: Date | string;
 
   @Field(() => String, { nullable: false })

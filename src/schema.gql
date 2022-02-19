@@ -67,6 +67,7 @@ input NestedStringNullableFilter {
 }
 
 type Query {
+  seeProfile(username: String!): User!
   users(cursor: UserWhereUniqueInput, distinct: [UserScalarFieldEnum!], orderBy: [UserOrderByWithRelationInput!], skip: Int, take: Int, where: UserWhereInput): [User!]!
 }
 
@@ -142,7 +143,6 @@ input UserCreateInput {
   id: UUID
   lastName: String
   password: String!
-  updatedAt: DateTime
   username: String!
 }
 
@@ -193,13 +193,13 @@ input UserWhereInput {
   NOT: [UserWhereInput!]
   OR: [UserWhereInput!]
   createdAt: DateTimeFilter
-  email: StringFilter
+  email: EmailAddress
   firstName: StringFilter
   id: StringFilter
   lastName: StringNullableFilter
   password: StringFilter
   updatedAt: DateTimeFilter
-  username: StringFilter
+  username: String
 }
 
 input UserWhereUniqueInput {
