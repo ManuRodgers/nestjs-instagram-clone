@@ -41,12 +41,14 @@ model User {
   /// @HideField({ match: '@(User)Create*Input' })
   updatedAt DateTime @updatedAt
 
-  firstName String
-  lastName  String?
-  username  String  @unique
+  firstName    String
+  lastName     String?
+  username     String  @unique
   /// @Validator.IsEmail()
   /// @FieldType('Scalars.GraphQLEmailAddress')
-  email     String  @unique
+  email        String  @unique
   /// @HideField({ output: true })
-  password  String
+  password     String
+  refreshToken String?
+  @@map("users")
 }

@@ -28,4 +28,7 @@ export class UserUncheckedUpdateInput {
 
   @Field(() => StringFieldUpdateOperationsInput, { nullable: true })
   password?: StringFieldUpdateOperationsInput;
+
+  @Field(() => NullableStringFieldUpdateOperationsInput, { nullable: true })
+  refreshToken?: NullableStringFieldUpdateOperationsInput;
 }

@@ -26,4 +26,7 @@ export class UserCountOrderByAggregateInput {
 
   @Field(() => SortOrder, { nullable: true })
   password?: keyof typeof SortOrder;
+
+  @Field(() => SortOrder, { nullable: true })
+  refreshToken?: keyof typeof SortOrder;
 }

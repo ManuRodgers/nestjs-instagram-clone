@@ -27,5 +27,8 @@ export class UserCountAggregateInput {
   password?: true;
 
   @Field(() => Boolean, { nullable: true })
+  refreshToken?: true;
+
+  @Field(() => Boolean, { nullable: true })
   _all?: true;
 }

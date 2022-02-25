@@ -7,53 +7,14 @@ import {
   User,
   UserWhereInput,
 } from 'src/@generated/prisma-nestjs-graphql/user';
-import { SeeProfileUserArgs } from './dto/see-profile-user.args';
+import { SeeProfileUserArgs } from 'src/users/dto/see-profile-user.args';
 
 @Injectable()
 export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(createOneUserArgs: CreateOneUserArgs): Promise<User> {
-    try {
-      const {
-        data: { email, username, firstName, password, lastName },
-      } = createOneUserArgs;
-      // Check if user already exists
-      const existingUser = await this.findExistingUser({
-        OR: [{ email }, { username }],
-      });
-      if (existingUser) {
-        throw new Error(
-          `User with email ${email} or username ${username} already exists`,
-        );
-      }
-      // hash password
-      const uglyPassword = await hash(password);
-
-      //  create user
-      return this.prisma.user.create({
-        data: {
-          email,
-          username,
-          firstName,
-          lastName,
-          password: uglyPassword,
-        },
-      });
-    } catch (error) {
-      console.error(error);
-      return error;
-    }
-  }
-
   async findAll(findManyUserArgs: FindManyUserArgs): Promise<User[]> {
     return this.prisma.user.findMany(findManyUserArgs);
-  }
-
-  private async findExistingUser(
-    userWhereInput: UserWhereInput,
-  ): Promise<User> {
-    return this.prisma.user.findFirst({ where: userWhereInput });
   }
 
   async seeProfile(seeProfileUserArgs: SeeProfileUserArgs): Promise<User> {
@@ -70,6 +31,12 @@ export class UsersService {
       console.error(error);
       return error;
     }
+  }
+
+  private async findExistingUser(
+    userWhereInput: UserWhereInput,
+  ): Promise<User> {
+    return this.prisma.user.findFirst({ where: userWhereInput });
   }
 
   // create(createUserInput: CreateUserInput) {

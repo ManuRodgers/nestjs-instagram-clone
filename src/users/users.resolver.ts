@@ -1,23 +1,15 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Query, Resolver } from '@nestjs/graphql';
 import {
-  User,
-  CreateOneUserArgs,
   FindManyUserArgs,
+  User,
 } from 'src/@generated/prisma-nestjs-graphql/user';
-import { SeeProfileUserArgs } from './dto/see-profile-user.args';
+import { SeeProfileUserArgs } from 'src/users/dto/see-profile-user.args';
 
 import { UsersService } from './users.service';
 
 @Resolver(() => User)
 export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
-
-  @Mutation(() => User)
-  async createUser(
-    @Args() createOneUserArgs: CreateOneUserArgs,
-  ): Promise<User> {
-    return this.usersService.create(createOneUserArgs);
-  }
 
   @Query(() => [User], { name: 'users' })
   async findAll(@Args() findManyUserArgs: FindManyUserArgs): Promise<User[]> {

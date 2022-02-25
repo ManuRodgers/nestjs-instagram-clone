@@ -30,6 +30,9 @@ export class UserGroupBy {
   @HideField()
   password!: string;
 
+  @Field(() => String, { nullable: true })
+  refreshToken?: string;
+
   @Field(() => UserCountAggregate, { nullable: true })
   _count?: UserCountAggregate;
 

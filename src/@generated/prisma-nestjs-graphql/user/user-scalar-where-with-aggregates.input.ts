@@ -37,4 +37,7 @@ export class UserScalarWhereWithAggregatesInput {
 
   @Field(() => StringWithAggregatesFilter, { nullable: true })
   password?: StringWithAggregatesFilter;
+
+  @Field(() => StringNullableWithAggregatesFilter, { nullable: true })
+  refreshToken?: StringNullableWithAggregatesFilter;
 }

@@ -26,4 +26,7 @@ export class UserMaxAggregate {
 
   @HideField()
   password?: string;
+
+  @Field(() => String, { nullable: true })
+  refreshToken?: string;
 }

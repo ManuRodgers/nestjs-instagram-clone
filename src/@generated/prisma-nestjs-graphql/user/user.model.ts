@@ -26,4 +26,7 @@ export class User {
 
   @HideField()
   password!: string;
+
+  @Field(() => String, { nullable: true })
+  refreshToken!: string | null;
 }

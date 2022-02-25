@@ -40,4 +40,7 @@ export class UserWhereInput {
 
   @Field(() => StringFilter, { nullable: true })
   password?: StringFilter;
+
+  @Field(() => StringNullableFilter, { nullable: true })
+  refreshToken?: StringNullableFilter;
 }

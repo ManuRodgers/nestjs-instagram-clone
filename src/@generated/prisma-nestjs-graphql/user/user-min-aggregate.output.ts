@@ -26,4 +26,7 @@ export class UserMinAggregate {
 
   @HideField()
   password?: string;
+
+  @Field(() => String, { nullable: true })
+  refreshToken?: string;
 }
