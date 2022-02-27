@@ -114,9 +114,8 @@ export class AuthService {
           id: userId,
         },
       });
-      if (!user) throw new ForbiddenException('Access denied');
-      if (!user.refreshToken)
-        throw new ForbiddenException('You have logged out');
+      if (!user || !user.refreshToken)
+        throw new ForbiddenException('Access denied');
       const refreshTokenOk = await verify(user.refreshToken, refreshToken);
       if (!refreshTokenOk) throw new ForbiddenException('Access denied');
       const { accessToken, refreshToken: newRefreshToken } =
