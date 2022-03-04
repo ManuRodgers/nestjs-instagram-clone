@@ -70,6 +70,10 @@ export class AuthService {
   async signIn(loginUserInput: LoginUserInput): Promise<AuthResult> {
     try {
       const { username, password } = loginUserInput;
+      console.log(
+        '🚀 ~ file: auth.service.ts ~ line 73 ~ AuthService ~ signIn ~ loginUserInput',
+        loginUserInput,
+      );
       const user = await this.validateUser(username, password);
       if (!user) {
         throw new Error('Invalid username or password');

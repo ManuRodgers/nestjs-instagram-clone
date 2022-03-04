@@ -1,15 +1,9 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, InputType, HideField } from '@nestjs/graphql';
 
 @InputType()
 export class UserCountAggregateInput {
-  @Field(() => Boolean, { nullable: true })
+  @HideField()
   id?: true;
-
-  @Field(() => Boolean, { nullable: true })
-  createdAt?: true;
-
-  @Field(() => Boolean, { nullable: true })
-  updatedAt?: true;
 
   @Field(() => Boolean, { nullable: true })
   firstName?: true;
@@ -24,10 +18,28 @@ export class UserCountAggregateInput {
   email?: true;
 
   @Field(() => Boolean, { nullable: true })
-  password?: true;
+  isEmailVerified?: true;
 
   @Field(() => Boolean, { nullable: true })
+  password?: true;
+
+  @HideField()
   refreshToken?: true;
+
+  @Field(() => Boolean, { nullable: true })
+  bio?: true;
+
+  @Field(() => Boolean, { nullable: true })
+  avatar?: true;
+
+  @Field(() => Boolean, { nullable: true })
+  avatarOutputUrl?: true;
+
+  @HideField()
+  createdAt?: true;
+
+  @HideField()
+  updatedAt?: true;
 
   @Field(() => Boolean, { nullable: true })
   _all?: true;

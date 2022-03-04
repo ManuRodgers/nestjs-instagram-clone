@@ -1,17 +1,13 @@
 import { Field, InputType, HideField } from '@nestjs/graphql';
 import * as Scalars from 'graphql-scalars';
-import * as Validator from 'class-validator';
+import * as Upload from 'graphql-upload';
+import { UserCreateNestedManyWithoutFollowersInput } from './user-create-nested-many-without-followers.input';
+import { UserCreateNestedManyWithoutFollowingInput } from './user-create-nested-many-without-following.input';
 
 @InputType()
 export class UserCreateInput {
-  @Field(() => Scalars.GraphQLUUID, { nullable: true })
+  @HideField()
   id?: string;
-
-  @HideField()
-  createdAt?: Date | string;
-
-  @HideField()
-  updatedAt?: Date | string;
 
   @Field(() => String, { nullable: false })
   firstName!: string;
@@ -23,12 +19,35 @@ export class UserCreateInput {
   username!: string;
 
   @Field(() => Scalars.GraphQLEmailAddress, { nullable: false })
-  @Validator.IsEmail()
   email!: string;
+
+  @Field(() => Boolean, { nullable: true })
+  isEmailVerified?: boolean;
 
   @Field(() => String, { nullable: false })
   password!: string;
 
-  @Field(() => String, { nullable: true })
+  @HideField()
   refreshToken?: string;
+
+  @Field(() => String, { nullable: true })
+  bio?: string;
+
+  @Field(() => Upload.GraphQLUpload, { nullable: true })
+  avatar?: string;
+
+  @Field(() => String, { nullable: true })
+  avatarOutputUrl?: string;
+
+  @Field(() => UserCreateNestedManyWithoutFollowersInput, { nullable: true })
+  following?: UserCreateNestedManyWithoutFollowersInput;
+
+  @Field(() => UserCreateNestedManyWithoutFollowingInput, { nullable: true })
+  followers?: UserCreateNestedManyWithoutFollowingInput;
+
+  @HideField()
+  createdAt?: Date | string;
+
+  @HideField()
+  updatedAt?: Date | string;
 }

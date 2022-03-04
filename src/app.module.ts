@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { GraphqlJwtAuthGuard } from './auth/guards/graphql-jwt-auth.guard';
+import { ServeStaticModule } from '@nestjs/serve-static';
 
 @Module({
   imports: [
@@ -37,6 +38,10 @@ import { GraphqlJwtAuthGuard } from './auth/guards/graphql-jwt-auth.guard';
           },
         ],
       },
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'uploads'),
+      serveRoot: '/static',
     }),
     UsersModule,
     AuthModule,

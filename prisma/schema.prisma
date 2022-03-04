@@ -11,9 +11,10 @@ generator client {
 }
 
 generator nestgraphql {
-  provider                             = "node node_modules/prisma-nestjs-graphql"
-  output                               = "../src/@generated/prisma-nestjs-graphql"
-  reExport                             = Directories
+  provider               = "node node_modules/prisma-nestjs-graphql"
+  output                 = "../src/@generated/prisma-nestjs-graphql"
+  noAtomicOperations     = true
+  reExport               = Directories
   // decorate_1_type        = "CreateOneUserArgs"
   // decorate_1_field       = data
   // decorate_1_name        = ValidateNested
@@ -24,31 +25,46 @@ generator nestgraphql {
   // decorate_2_name        = Type
   // decorate_2_from        = "class-transformer"
   // decorate_2_arguments   = "['() => {propertyType.0}']"
-  fields_Validator_from                = "class-validator"
-  fields_Validator_input               = true
-  fields_Scalars_from                  = "graphql-scalars"
-  fields_Scalars_input                 = true
-  fields_Scalars_output                = true
-  useInputType_UserWhereInput_email    = "match:String"
-  useInputType_UserWhereInput_username = "match:String"
+  fields_Validator_from  = "class-validator"
+  fields_Validator_input = true
+  fields_Scalars_from    = "graphql-scalars"
+  fields_Scalars_input   = true
+  fields_Scalars_output  = true
+  fields_Upload_from     = "graphql-upload"
+  fields_Upload_input    = true
+  fields_Upload_output   = true
+  // useInputType_UserWhereInput_email    = "match:String"
+  // useInputType_UserWhereInput_username = "match:String"
 }
 
 model User {
   /// @FieldType('Scalars.GraphQLUUID')
-  id        String   @id @default(uuid())
+  /// @HideField({ match: '@(User)Update*Input', input: true })
+  id        String  @id @default(uuid())
+  firstName String
+  lastName  String?
+  username  String  @unique
+
+  /// @FieldType('Scalars.GraphQLEmailAddress')
+  email           String  @unique
+  isEmailVerified Boolean @default(false)
+  /// @HideField({ output: true })
+  password        String
+  /// @HideField({ match: '@(User)Update*Input', input: true })
+  refreshToken    String?
+  bio             String?
+  /// @FieldType('Upload.GraphQLUpload')
+  avatar          String?
+  avatarOutputUrl String?
+
+  following User[] @relation(name: "FollowRelation", references: [id])
+  followers User[] @relation(name: "FollowRelation", references: [id])
+
+  /// @HideField({ match: '@(User)Update*Input', input: true })
   /// @HideField({ match: '@(User)Create*Input' })
   createdAt DateTime @default(now())
+  /// @HideField({ match: '@(User)Update*Input', input: true })
   /// @HideField({ match: '@(User)Create*Input' })
   updatedAt DateTime @updatedAt
-
-  firstName    String
-  lastName     String?
-  username     String  @unique
-  /// @Validator.IsEmail()
-  /// @FieldType('Scalars.GraphQLEmailAddress')
-  email        String  @unique
-  /// @HideField({ output: true })
-  password     String
-  refreshToken String?
   @@map("users")
 }

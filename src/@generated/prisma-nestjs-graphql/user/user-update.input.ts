@@ -1,34 +1,53 @@
-import { Field, InputType } from '@nestjs/graphql';
-import { StringFieldUpdateOperationsInput } from '../prisma/string-field-update-operations.input';
-import { DateTimeFieldUpdateOperationsInput } from '../prisma/date-time-field-update-operations.input';
-import { NullableStringFieldUpdateOperationsInput } from '../prisma/nullable-string-field-update-operations.input';
+import { Field, InputType, HideField } from '@nestjs/graphql';
+import * as Scalars from 'graphql-scalars';
+import * as Upload from 'graphql-upload';
+import { UserUpdateManyWithoutFollowersInput } from './user-update-many-without-followers.input';
+import { UserUpdateManyWithoutFollowingInput } from './user-update-many-without-following.input';
 
 @InputType()
 export class UserUpdateInput {
-  @Field(() => StringFieldUpdateOperationsInput, { nullable: true })
-  id?: StringFieldUpdateOperationsInput;
+  @HideField()
+  id?: string;
 
-  @Field(() => DateTimeFieldUpdateOperationsInput, { nullable: true })
-  createdAt?: DateTimeFieldUpdateOperationsInput;
+  @Field(() => String, { nullable: true })
+  firstName?: string;
 
-  @Field(() => DateTimeFieldUpdateOperationsInput, { nullable: true })
-  updatedAt?: DateTimeFieldUpdateOperationsInput;
+  @Field(() => String, { nullable: true })
+  lastName?: string;
 
-  @Field(() => StringFieldUpdateOperationsInput, { nullable: true })
-  firstName?: StringFieldUpdateOperationsInput;
+  @Field(() => String, { nullable: true })
+  username?: string;
 
-  @Field(() => NullableStringFieldUpdateOperationsInput, { nullable: true })
-  lastName?: NullableStringFieldUpdateOperationsInput;
+  @Field(() => Scalars.GraphQLEmailAddress, { nullable: true })
+  email?: string;
 
-  @Field(() => StringFieldUpdateOperationsInput, { nullable: true })
-  username?: StringFieldUpdateOperationsInput;
+  @Field(() => Boolean, { nullable: true })
+  isEmailVerified?: boolean;
 
-  @Field(() => StringFieldUpdateOperationsInput, { nullable: true })
-  email?: StringFieldUpdateOperationsInput;
+  @Field(() => String, { nullable: true })
+  password?: string;
 
-  @Field(() => StringFieldUpdateOperationsInput, { nullable: true })
-  password?: StringFieldUpdateOperationsInput;
+  @HideField()
+  refreshToken?: string;
 
-  @Field(() => NullableStringFieldUpdateOperationsInput, { nullable: true })
-  refreshToken?: NullableStringFieldUpdateOperationsInput;
+  @Field(() => String, { nullable: true })
+  bio?: string;
+
+  @Field(() => Upload.GraphQLUpload, { nullable: true })
+  avatar?: string;
+
+  @Field(() => String, { nullable: true })
+  avatarOutputUrl?: string;
+
+  @Field(() => UserUpdateManyWithoutFollowersInput, { nullable: true })
+  following?: UserUpdateManyWithoutFollowersInput;
+
+  @Field(() => UserUpdateManyWithoutFollowingInput, { nullable: true })
+  followers?: UserUpdateManyWithoutFollowingInput;
+
+  @HideField()
+  createdAt?: Date | string;
+
+  @HideField()
+  updatedAt?: Date | string;
 }

@@ -1,9 +1,9 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, InputType, HideField } from '@nestjs/graphql';
 import { StringFilter } from '../prisma/string-filter.input';
-import { DateTimeFilter } from '../prisma/date-time-filter.input';
 import { StringNullableFilter } from '../prisma/string-nullable-filter.input';
-import * as Scalars from 'graphql-scalars';
-import * as Validator from 'class-validator';
+import { BoolFilter } from '../prisma/bool-filter.input';
+import { UserListRelationFilter } from './user-list-relation-filter.input';
+import { DateTimeFilter } from '../prisma/date-time-filter.input';
 
 @InputType()
 export class UserWhereInput {
@@ -16,14 +16,8 @@ export class UserWhereInput {
   @Field(() => [UserWhereInput], { nullable: true })
   NOT?: Array<UserWhereInput>;
 
-  @Field(() => StringFilter, { nullable: true })
+  @HideField()
   id?: StringFilter;
-
-  @Field(() => DateTimeFilter, { nullable: true })
-  createdAt?: DateTimeFilter;
-
-  @Field(() => DateTimeFilter, { nullable: true })
-  updatedAt?: DateTimeFilter;
 
   @Field(() => StringFilter, { nullable: true })
   firstName?: StringFilter;
@@ -31,16 +25,39 @@ export class UserWhereInput {
   @Field(() => StringNullableFilter, { nullable: true })
   lastName?: StringNullableFilter;
 
-  @Field(() => String, { nullable: true })
-  username?: string;
+  @Field(() => StringFilter, { nullable: true })
+  username?: StringFilter;
 
-  @Field(() => Scalars.GraphQLEmailAddress, { nullable: true })
-  @Validator.IsEmail()
-  email?: string;
+  @Field(() => StringFilter, { nullable: true })
+  email?: StringFilter;
+
+  @Field(() => BoolFilter, { nullable: true })
+  isEmailVerified?: BoolFilter;
 
   @Field(() => StringFilter, { nullable: true })
   password?: StringFilter;
 
-  @Field(() => StringNullableFilter, { nullable: true })
+  @HideField()
   refreshToken?: StringNullableFilter;
+
+  @Field(() => StringNullableFilter, { nullable: true })
+  bio?: StringNullableFilter;
+
+  @Field(() => StringNullableFilter, { nullable: true })
+  avatar?: StringNullableFilter;
+
+  @Field(() => StringNullableFilter, { nullable: true })
+  avatarOutputUrl?: StringNullableFilter;
+
+  @Field(() => UserListRelationFilter, { nullable: true })
+  following?: UserListRelationFilter;
+
+  @Field(() => UserListRelationFilter, { nullable: true })
+  followers?: UserListRelationFilter;
+
+  @HideField()
+  createdAt?: DateTimeFilter;
+
+  @HideField()
+  updatedAt?: DateTimeFilter;
 }
