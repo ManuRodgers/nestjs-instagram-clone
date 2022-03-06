@@ -46,6 +46,8 @@ type Mutation {
   followUser(followUserInput: FollowUserInput!): FollowUserOutput!
   logout: LogoutResult!
   refresh: AuthResult!
+  seeFollowers(seeFollowersInput: SeeFollowersInput!): SeeFollowersOutput!
+  seeFollowing(seeFollowingInput: SeeFollowingInput!): SeeFollowingOutput!
   signIn(loginUserInput: LoginUserInput!): AuthResult!
   signup(data: UserCreateInput!): AuthResult!
   unFollowUser(unFollowUserInput: UnFollowUserInput!): UnFollowUserOutput!
@@ -86,13 +88,72 @@ input NestedStringNullableFilter {
 }
 
 type Query {
-  seeProfile(username: String!): User!
+  searchUser(searchUserInput: SearchUserInput!): [User!]!
+  seeProfile(seeProfileInput: SeeProfileInput!): SeeProfileOutput!
   users(cursor: UserWhereUniqueInput, distinct: [UserScalarFieldEnum!], orderBy: [UserOrderByWithRelationInput!], skip: Int, take: Int, where: UserWhereInput): [User!]!
 }
 
 enum QueryMode {
   default
   insensitive
+}
+
+input SearchUserInput {
+  currentCursor: UUID
+  keyword: String!
+  pageSize: Int = 5
+}
+
+input SeeFollowersInput {
+  pageNum: Int!
+  pageSize: Int = 5
+  username: String!
+}
+
+type SeeFollowersOutput {
+  error: String
+  followers: [User!]
+  ok: Boolean!
+  totalPages: Int
+}
+
+input SeeFollowingInput {
+  currentCursor: UUID
+  pageSize: Int = 5
+  username: String!
+}
+
+type SeeFollowingOutput {
+  error: String
+  following: [User!]
+  hasMore: Boolean
+  ok: Boolean!
+}
+
+input SeeProfileInput {
+  username: String!
+}
+
+type SeeProfileOutput {
+  _count: UserCount!
+  avatar: Upload
+  avatarOutputUrl: String
+  bio: String
+  createdAt: DateTime!
+  email: EmailAddress!
+  firstName: String!
+  followers: [User!]
+  following: [User!]
+  id: UUID!
+  isEmailVerified: Boolean!
+  isFollowing: Boolean!
+  isMe: Boolean!
+  lastName: String
+  refreshToken: String
+  totalFollowers: Int!
+  totalFollowing: Int!
+  updatedAt: DateTime!
+  username: String!
 }
 
 enum SortOrder {

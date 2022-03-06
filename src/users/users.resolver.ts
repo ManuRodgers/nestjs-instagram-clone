@@ -1,19 +1,33 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Int,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import {
   FindManyUserArgs,
   User,
   UserUpdateInput,
 } from 'src/@generated/prisma-nestjs-graphql/user';
 import { CurrentUserId } from 'src/auth/decorators/current-user-id.decorator';
-import { SeeProfileUserArgs } from 'src/users/dto/see-profile-user.args';
+import { SeeProfileInput } from 'src/users/dto/see-profile.input';
 
 import { FollowUserInput } from './dto/follow-user.input';
 import { FollowUserOutput } from './dto/follow-user.output';
 import { UnFollowUserInput } from './dto/unFollow-user.input';
 import { UnFollowUserOutput } from './dto/unFollow-user.output';
 import { UsersService } from './users.service';
+import { SeeFollowersOutput } from './dto/see-followers.output';
+import { SeeFollowersInput } from './dto/see-followers.input';
+import { SeeFollowingOutput } from './dto/see-following.output';
+import { SeeFollowingInput } from './dto/see-following.input';
+import { SeeProfileOutput } from './dto/see-profile.output';
+import { SearchUserInput } from './dto/search-user.input';
 
-@Resolver(() => User)
+@Resolver(() => SeeProfileOutput)
 export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
 
@@ -22,11 +36,42 @@ export class UsersResolver {
     return this.usersService.findAll(findManyUserArgs);
   }
 
-  @Query(() => User, { name: 'seeProfile' })
+  @Query(() => [User])
+  async searchUser(
+    @Args('searchUserInput') searchUserInput: SearchUserInput,
+  ): Promise<User[]> {
+    return this.usersService.searchUser(searchUserInput);
+  }
+
+  @Query(() => SeeProfileOutput)
   async seeProfile(
-    @Args() seeProfileUserArgs: SeeProfileUserArgs,
-  ): Promise<User> {
-    return this.usersService.seeProfile(seeProfileUserArgs);
+    @Args('seeProfileInput') seeProfileInput: SeeProfileInput,
+  ): Promise<SeeProfileOutput> {
+    return this.usersService.seeProfile(seeProfileInput);
+  }
+
+  @ResolveField('totalFollowing', () => Int)
+  async getTotalFollowing(@Parent() { id }: SeeProfileOutput): Promise<number> {
+    return this.usersService.getTotalFollowing(id);
+  }
+
+  @ResolveField('totalFollowers', () => Int)
+  async getTotalFollowers(@Parent() { id }: SeeProfileOutput): Promise<number> {
+    return this.usersService.getTotalFollowers(id);
+  }
+  @ResolveField('isMe', () => Boolean)
+  async getIsMe(
+    @Parent() { id }: SeeProfileOutput,
+    @CurrentUserId() userId: string,
+  ): Promise<boolean> {
+    return id === userId;
+  }
+  @ResolveField('isFollowing', () => Boolean)
+  async getIsFollowing(
+    @Parent() { id }: SeeProfileOutput,
+    @CurrentUserId() currentUserId: string,
+  ): Promise<boolean> {
+    return this.usersService.getIsFollowing(id, currentUserId);
   }
 
   @Mutation(() => User)
@@ -45,6 +90,7 @@ export class UsersResolver {
   ): Promise<FollowUserOutput> {
     return this.usersService.followUser(followUserInput, userId);
   }
+
   @Mutation(() => UnFollowUserOutput)
   async unFollowUser(
     @Args('unFollowUserInput') unFollowUserInput: UnFollowUserInput,
@@ -53,13 +99,16 @@ export class UsersResolver {
     return this.usersService.unFollowUser(unFollowUserInput, userId);
   }
 
-  // @Query(() => User, { name: 'user' })
-  // findOne(@Args('id', { type: () => Int }) id: number) {
-  //   return this.usersService.findOne(id);
-  // }
-
-  // @Mutation(() => User)
-  // removeUser(@Args('id', { type: () => Int }) id: number) {
-  //   return this.usersService.remove(id);
-  // }
+  @Mutation(() => SeeFollowersOutput)
+  async seeFollowers(
+    @Args('seeFollowersInput') seeFollowersInput: SeeFollowersInput,
+  ): Promise<SeeFollowersOutput> {
+    return this.usersService.seeFollowers(seeFollowersInput);
+  }
+  @Mutation(() => SeeFollowingOutput)
+  async seeFollowing(
+    @Args('seeFollowingInput') seeFollowingInput: SeeFollowingInput,
+  ): Promise<SeeFollowingOutput> {
+    return this.usersService.seeFollowing(seeFollowingInput);
+  }
 }

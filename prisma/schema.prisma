@@ -56,9 +56,10 @@ model User {
   /// @FieldType('Upload.GraphQLUpload')
   avatar          String?
   avatarOutputUrl String?
-
-  following User[] @relation(name: "FollowRelation", references: [id])
-  followers User[] @relation(name: "FollowRelation", references: [id])
+  /// @HideField({ output: true, input: true })
+  following       User[]  @relation(name: "FollowRelation", references: [id])
+  /// @HideField({ output: true, input: true })
+  followers       User[]  @relation(name: "FollowRelation", references: [id])
 
   /// @HideField({ match: '@(User)Update*Input', input: true })
   /// @HideField({ match: '@(User)Create*Input' })

@@ -8,12 +8,17 @@ import {
   User,
   UserUpdateInput,
 } from 'src/@generated/prisma-nestjs-graphql/user';
-import { SeeProfileUserArgs } from 'src/users/dto/see-profile-user.args';
+import { SeeProfileInput } from 'src/users/dto/see-profile.input';
 
 import { FollowUserInput } from './dto/follow-user.input';
 import { FollowUserOutput } from './dto/follow-user.output';
+import { SeeFollowersInput } from './dto/see-followers.input';
 import { UnFollowUserInput } from './dto/unFollow-user.input';
 import { UnFollowUserOutput } from './dto/unFollow-user.output';
+import { SeeFollowersOutput } from './dto/see-followers.output';
+import { SeeFollowingInput } from './dto/see-following.input';
+import { SeeFollowingOutput } from './dto/see-following.output';
+import { SearchUserInput } from './dto/search-user.input';
 
 @Injectable()
 export class UsersService {
@@ -23,11 +28,11 @@ export class UsersService {
     return this.prisma.user.findMany(findManyUserArgs);
   }
 
-  async seeProfile({ username }: SeeProfileUserArgs): Promise<User> {
+  async seeProfile({ username }: SeeProfileInput): Promise<User> {
     try {
       const foundUser = await this.prisma.user.findUnique({
         where: { username },
-        // include: { following: true }, but we usually don't need to include for performance reasons
+        // include: { following: true },  but we usually don't need to include for performance reasons
       });
       if (!foundUser) {
         throw new Error(`User with username ${username} not found`);
@@ -90,11 +95,16 @@ export class UsersService {
       const { username } = followUserInput;
       const foundUser = await this.prisma.user.findUnique({
         where: { username },
+        select: { id: true },
       });
       if (!foundUser) {
         throw new Error(`User with username ${username} not found`);
       }
-      const followingUsers = await this.getFollowingUsers(userId);
+      const followingUsers = await this.prisma.user
+        .findUnique({
+          where: { id: userId },
+        })
+        .following();
       if (followingUsers.map((item) => item.username).includes(username)) {
         throw new Error(`User with username ${username} already followed`);
       }
@@ -127,11 +137,16 @@ export class UsersService {
       const { username } = unFollowUserInput;
       const foundUser = await this.prisma.user.findUnique({
         where: { username },
+        select: { id: true },
       });
       if (!foundUser) {
         throw new Error(`User with username ${username} not found`);
       }
-      const followingUsers = await this.getFollowingUsers(userId);
+      const followingUsers = await this.prisma.user
+        .findUnique({
+          where: { id: userId },
+        })
+        .following();
       if (!followingUsers.map((item) => item.username).includes(username)) {
         throw new Error(`User with username ${username} not followed`);
       }
@@ -155,11 +170,141 @@ export class UsersService {
     }
   }
 
-  private async getFollowingUsers(userId: string): Promise<User[]> {
-    return this.prisma.user
+  // offset pagination
+  async seeFollowers({
+    username,
+    pageNum,
+    pageSize,
+  }: SeeFollowersInput): Promise<SeeFollowersOutput> {
+    try {
+      const foundUser = await this.prisma.user.findUnique({
+        where: { username },
+        select: { id: true },
+      });
+      if (!foundUser) {
+        throw new Error(`User with username ${username} not found`);
+      }
+      const followers = await this.prisma.user
+        .findUnique({ where: { username } })
+        .followers({
+          take: pageSize,
+          skip: pageSize * (pageNum - 1),
+        });
+      const totalPages = await this.prisma.user.count({
+        where: { following: { some: { username } } },
+      });
+      return {
+        ok: true,
+        followers,
+        totalPages,
+      };
+    } catch (error) {
+      console.error(error);
+      return {
+        ok: false,
+        error: error.message,
+      };
+    }
+  }
+
+  // cursor pagination
+  async seeFollowing({
+    pageSize,
+    username,
+    currentCursor,
+  }: SeeFollowingInput): Promise<SeeFollowingOutput> {
+    try {
+      const foundUser = await this.prisma.user.findUnique({
+        where: { username },
+        select: { id: true },
+      });
+      if (!foundUser) {
+        throw new Error(`User with username ${username} not found`);
+      }
+      const following = await this.prisma.user
+        .findUnique({ where: { username } })
+        .following(this.getCursorPaginationObject(pageSize, currentCursor));
+      return {
+        ok: true,
+        following,
+        hasMore: following.length === 0 ? false : true,
+      };
+    } catch (error) {
+      console.error(error);
+      return {
+        ok: false,
+        error: error.message,
+      };
+    }
+  }
+
+  async searchUser({
+    keyword,
+    currentCursor,
+    pageSize,
+  }: SearchUserInput): Promise<User[]> {
+    return await this.prisma.user.findMany({
+      where: {
+        username: { startsWith: keyword },
+      },
+      ...this.getCursorPaginationObject(pageSize, currentCursor),
+      orderBy: {
+        username: 'asc',
+      },
+    });
+  }
+
+  private getCursorPaginationObject(
+    pageSize: number,
+    currentCursor?: string,
+  ): {
+    cursor: {
+      id: string;
+    };
+    take: number;
+    skip: number;
+  } {
+    return {
+      take: pageSize,
+      skip: currentCursor ? 1 : 0,
+      ...(currentCursor && {
+        cursor: {
+          id: currentCursor,
+        },
+      }),
+    };
+  }
+
+  async getTotalFollowing(id: string): Promise<number> {
+    try {
+      return await this.prisma.user.count({
+        where: { followers: { some: { id } } },
+      });
+    } catch (error) {
+      console.error(error);
+      return error;
+    }
+  }
+  async getTotalFollowers(id: string): Promise<number> {
+    try {
+      return await this.prisma.user.count({
+        where: { following: { some: { id } } },
+      });
+    } catch (error) {
+      console.error(error);
+      return error;
+    }
+  }
+  async getIsFollowing(id: string, currentUserId: string): Promise<boolean> {
+    // yourself can't follow yourself
+    if (id === currentUserId) {
+      return false;
+    }
+    const isFollowing = await this.prisma.user
       .findUnique({
-        where: { id: userId },
+        where: { id: currentUserId },
       })
       .following();
+    return isFollowing.map((item) => item.id).includes(id);
   }
 }
