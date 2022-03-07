@@ -1,6 +1,7 @@
 import { Field, InputType, HideField } from '@nestjs/graphql';
 import { SortOrder } from '../prisma/sort-order.enum';
 import { UserOrderByRelationAggregateInput } from './user-order-by-relation-aggregate.input';
+import { PhotoOrderByRelationAggregateInput } from '../photo/photo-order-by-relation-aggregate.input';
 
 @InputType()
 export class UserOrderByWithRelationInput {
@@ -37,11 +38,14 @@ export class UserOrderByWithRelationInput {
   @Field(() => SortOrder, { nullable: true })
   avatarOutputUrl?: keyof typeof SortOrder;
 
-  @Field(() => UserOrderByRelationAggregateInput, { nullable: true })
+  @HideField()
   following?: UserOrderByRelationAggregateInput;
 
-  @Field(() => UserOrderByRelationAggregateInput, { nullable: true })
+  @HideField()
   followers?: UserOrderByRelationAggregateInput;
+
+  @Field(() => PhotoOrderByRelationAggregateInput, { nullable: true })
+  photos?: PhotoOrderByRelationAggregateInput;
 
   @HideField()
   createdAt?: keyof typeof SortOrder;

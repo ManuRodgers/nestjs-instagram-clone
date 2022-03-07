@@ -1,6 +1,7 @@
 import { Field, ObjectType, HideField } from '@nestjs/graphql';
 import * as Scalars from 'graphql-scalars';
 import * as Upload from 'graphql-upload';
+import { Photo } from '../photo/photo.model';
 import { UserCount } from './user-count.output';
 
 @ObjectType()
@@ -38,11 +39,14 @@ export class User {
   @Field(() => String, { nullable: true })
   avatarOutputUrl!: string | null;
 
-  @Field(() => [User], { nullable: true })
+  @HideField()
   following?: Array<User>;
 
-  @Field(() => [User], { nullable: true })
+  @HideField()
   followers?: Array<User>;
+
+  @Field(() => [Photo], { nullable: true })
+  photos?: Array<Photo>;
 
   @Field(() => Date, { nullable: false })
   createdAt!: Date;

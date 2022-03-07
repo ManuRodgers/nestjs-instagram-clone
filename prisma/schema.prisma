@@ -40,14 +40,13 @@ generator nestgraphql {
 model User {
   /// @FieldType('Scalars.GraphQLUUID')
   /// @HideField({ match: '@(User)Update*Input', input: true })
-  id        String  @id @default(uuid())
-  firstName String
-  lastName  String?
-  username  String  @unique
-
+  id              String   @id @default(uuid())
+  firstName       String
+  lastName        String?
+  username        String   @unique
   /// @FieldType('Scalars.GraphQLEmailAddress')
-  email           String  @unique
-  isEmailVerified Boolean @default(false)
+  email           String   @unique
+  isEmailVerified Boolean  @default(false)
   /// @HideField({ output: true })
   password        String
   /// @HideField({ match: '@(User)Update*Input', input: true })
@@ -57,15 +56,52 @@ model User {
   avatar          String?
   avatarOutputUrl String?
   /// @HideField({ output: true, input: true })
-  following       User[]  @relation(name: "FollowRelation", references: [id])
+  following       User[]   @relation(name: "FollowRelation", references: [id])
   /// @HideField({ output: true, input: true })
-  followers       User[]  @relation(name: "FollowRelation", references: [id])
+  followers       User[]   @relation(name: "FollowRelation", references: [id])
+  photos          Photo[]  @relation(name: "UserPhotosRelation")
+  /// @HideField({ match: '@(User)Update*Input', input: true })
+  /// @HideField({ match: '@(User)Create*Input' })
+  createdAt       DateTime @default(now())
+  /// @HideField({ match: '@(User)Update*Input', input: true })
+  /// @HideField({ match: '@(User)Create*Input' })
+  updatedAt       DateTime @updatedAt
 
-  /// @HideField({ match: '@(User)Update*Input', input: true })
-  /// @HideField({ match: '@(User)Create*Input' })
-  createdAt DateTime @default(now())
-  /// @HideField({ match: '@(User)Update*Input', input: true })
-  /// @HideField({ match: '@(User)Create*Input' })
-  updatedAt DateTime @updatedAt
   @@map("users")
+}
+
+model Photo {
+  /// @FieldType('Scalars.GraphQLUUID')
+  id             String    @id @default(uuid())
+  /// @FieldType('Upload.GraphQLUpload')
+  file           String?
+  photoOutputUrl String?
+  caption        String?
+  /// @FieldType('Scalars.GraphQLUUID')
+  userId         String
+  user           User      @relation(name: "UserPhotosRelation", references: [id], fields: [userId])
+  hashtags       Hashtag[] @relation(name: "PhotosHashtagsRelation")
+  /// @HideField({ match: '@(Photo)Update*Input', input: true })
+  /// @HideField({ match: '@(Photo)Create*Input' })
+  createdAt      DateTime  @default(now())
+  /// @HideField({ match: '@(Photo)Update*Input', input: true })
+  /// @HideField({ match: '@(Photo)Create*Input' })
+  updatedAt      DateTime  @updatedAt
+
+  @@map("photos")
+}
+
+model Hashtag {
+  /// @FieldType('Scalars.GraphQLUUID')
+  id        String   @id @default(uuid())
+  hashtag   String   @unique
+  photos    Photo[]  @relation(name: "PhotosHashtagsRelation")
+  /// @HideField({ match: '@(Hashtag)Update*Input', input: true })
+  /// @HideField({ match: '@(Hashtag)Create*Input' })
+  createdAt DateTime @default(now())
+  /// @HideField({ match: '@(Hashtag)Update*Input', input: true })
+  /// @HideField({ match: '@(Hashtag)Create*Input' })
+  updatedAt DateTime @updatedAt
+
+  @@map("hashtags")
 }

@@ -3,6 +3,7 @@ import * as Scalars from 'graphql-scalars';
 import * as Upload from 'graphql-upload';
 import { UserCreateNestedManyWithoutFollowersInput } from './user-create-nested-many-without-followers.input';
 import { UserCreateNestedManyWithoutFollowingInput } from './user-create-nested-many-without-following.input';
+import { PhotoCreateNestedManyWithoutUserInput } from '../photo/photo-create-nested-many-without-user.input';
 
 @InputType()
 export class UserCreateInput {
@@ -39,11 +40,14 @@ export class UserCreateInput {
   @Field(() => String, { nullable: true })
   avatarOutputUrl?: string;
 
-  @Field(() => UserCreateNestedManyWithoutFollowersInput, { nullable: true })
+  @HideField()
   following?: UserCreateNestedManyWithoutFollowersInput;
 
-  @Field(() => UserCreateNestedManyWithoutFollowingInput, { nullable: true })
+  @HideField()
   followers?: UserCreateNestedManyWithoutFollowingInput;
+
+  @Field(() => PhotoCreateNestedManyWithoutUserInput, { nullable: true })
+  photos?: PhotoCreateNestedManyWithoutUserInput;
 
   @HideField()
   createdAt?: Date | string;

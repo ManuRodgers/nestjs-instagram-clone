@@ -14,6 +14,21 @@ input BoolFilter {
   not: NestedBoolFilter
 }
 
+input CreatePhotoInput {
+  caption: String
+  file: String!
+}
+
+type CreatePhotoOutput {
+  caption: String
+  createdAt: DateTime!
+  file: String
+  id: UUID!
+  photoOutputUrl: String
+  updatedAt: DateTime!
+  userId: UUID!
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
@@ -33,6 +48,128 @@ type FollowUserOutput {
   ok: Boolean!
 }
 
+type Hashtag {
+  _count: HashtagCount!
+  createdAt: DateTime!
+  hashtag: String!
+  id: UUID!
+  photos: [Photo!]
+  updatedAt: DateTime!
+}
+
+type HashtagCount {
+  photos: Int!
+}
+
+type HashtagCountAggregate {
+  _all: Int!
+  createdAt: Int!
+  hashtag: Int!
+  id: Int!
+  updatedAt: Int!
+}
+
+input HashtagCreateNestedManyWithoutPhotosInput {
+  connect: [HashtagWhereUniqueInput!]
+  connectOrCreate: [HashtagCreateOrConnectWithoutPhotosInput!]
+  create: [HashtagCreateWithoutPhotosInput!]
+}
+
+input HashtagCreateOrConnectWithoutPhotosInput {
+  create: HashtagCreateWithoutPhotosInput!
+  where: HashtagWhereUniqueInput!
+}
+
+input HashtagCreateWithoutPhotosInput {
+  hashtag: String!
+  id: UUID
+}
+
+input HashtagListRelationFilter {
+  every: HashtagWhereInput
+  none: HashtagWhereInput
+  some: HashtagWhereInput
+}
+
+type HashtagMaxAggregate {
+  createdAt: DateTime
+  hashtag: String
+  id: UUID
+  updatedAt: DateTime
+}
+
+type HashtagMinAggregate {
+  createdAt: DateTime
+  hashtag: String
+  id: UUID
+  updatedAt: DateTime
+}
+
+input HashtagOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input HashtagScalarWhereInput {
+  AND: [HashtagScalarWhereInput!]
+  NOT: [HashtagScalarWhereInput!]
+  OR: [HashtagScalarWhereInput!]
+  hashtag: StringFilter
+  id: StringFilter
+}
+
+input HashtagUpdateManyMutationInput {
+  hashtag: String
+  id: UUID
+}
+
+input HashtagUpdateManyWithWhereWithoutPhotosInput {
+  data: HashtagUpdateManyMutationInput!
+  where: HashtagScalarWhereInput!
+}
+
+input HashtagUpdateManyWithoutPhotosInput {
+  connect: [HashtagWhereUniqueInput!]
+  connectOrCreate: [HashtagCreateOrConnectWithoutPhotosInput!]
+  create: [HashtagCreateWithoutPhotosInput!]
+  delete: [HashtagWhereUniqueInput!]
+  deleteMany: [HashtagScalarWhereInput!]
+  disconnect: [HashtagWhereUniqueInput!]
+  set: [HashtagWhereUniqueInput!]
+  update: [HashtagUpdateWithWhereUniqueWithoutPhotosInput!]
+  updateMany: [HashtagUpdateManyWithWhereWithoutPhotosInput!]
+  upsert: [HashtagUpsertWithWhereUniqueWithoutPhotosInput!]
+}
+
+input HashtagUpdateWithWhereUniqueWithoutPhotosInput {
+  data: HashtagUpdateWithoutPhotosInput!
+  where: HashtagWhereUniqueInput!
+}
+
+input HashtagUpdateWithoutPhotosInput {
+  hashtag: String
+  id: UUID
+}
+
+input HashtagUpsertWithWhereUniqueWithoutPhotosInput {
+  create: HashtagCreateWithoutPhotosInput!
+  update: HashtagUpdateWithoutPhotosInput!
+  where: HashtagWhereUniqueInput!
+}
+
+input HashtagWhereInput {
+  AND: [HashtagWhereInput!]
+  NOT: [HashtagWhereInput!]
+  OR: [HashtagWhereInput!]
+  hashtag: StringFilter
+  id: StringFilter
+  photos: PhotoListRelationFilter
+}
+
+input HashtagWhereUniqueInput {
+  hashtag: String
+  id: UUID
+}
+
 input LoginUserInput {
   password: String!
   username: String!
@@ -43,6 +180,7 @@ type LogoutResult {
 }
 
 type Mutation {
+  createPhoto(createPhotoInput: CreatePhotoInput!): CreatePhotoOutput!
   followUser(followUserInput: FollowUserInput!): FollowUserOutput!
   logout: LogoutResult!
   refresh: AuthResult!
@@ -87,8 +225,193 @@ input NestedStringNullableFilter {
   startsWith: String
 }
 
+type Photo {
+  _count: PhotoCount!
+  caption: String
+  createdAt: DateTime!
+  file: Upload
+  hashtags: [Hashtag!]
+  id: UUID!
+  photoOutputUrl: String
+  updatedAt: DateTime!
+  user: User!
+  userId: UUID!
+}
+
+type PhotoCount {
+  hashtags: Int!
+}
+
+type PhotoCountAggregate {
+  _all: Int!
+  caption: Int!
+  createdAt: Int!
+  file: Int!
+  id: Int!
+  photoOutputUrl: Int!
+  updatedAt: Int!
+  userId: Int!
+}
+
+input PhotoCreateManyUserInput {
+  caption: String
+  file: Upload
+  id: UUID
+  photoOutputUrl: String
+}
+
+input PhotoCreateManyUserInputEnvelope {
+  data: [PhotoCreateManyUserInput!]!
+  skipDuplicates: Boolean
+}
+
+input PhotoCreateNestedManyWithoutUserInput {
+  connect: [PhotoWhereUniqueInput!]
+  connectOrCreate: [PhotoCreateOrConnectWithoutUserInput!]
+  create: [PhotoCreateWithoutUserInput!]
+  createMany: PhotoCreateManyUserInputEnvelope
+}
+
+input PhotoCreateOrConnectWithoutUserInput {
+  create: PhotoCreateWithoutUserInput!
+  where: PhotoWhereUniqueInput!
+}
+
+input PhotoCreateWithoutUserInput {
+  caption: String
+  file: Upload
+  hashtags: HashtagCreateNestedManyWithoutPhotosInput
+  id: UUID
+  photoOutputUrl: String
+}
+
+input PhotoListRelationFilter {
+  every: PhotoWhereInput
+  none: PhotoWhereInput
+  some: PhotoWhereInput
+}
+
+type PhotoMaxAggregate {
+  caption: String
+  createdAt: DateTime
+  file: Upload
+  id: UUID
+  photoOutputUrl: String
+  updatedAt: DateTime
+  userId: UUID
+}
+
+type PhotoMinAggregate {
+  caption: String
+  createdAt: DateTime
+  file: Upload
+  id: UUID
+  photoOutputUrl: String
+  updatedAt: DateTime
+  userId: UUID
+}
+
+input PhotoOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input PhotoOrderByWithRelationInput {
+  caption: SortOrder
+  file: SortOrder
+  hashtags: HashtagOrderByRelationAggregateInput
+  id: SortOrder
+  photoOutputUrl: SortOrder
+  user: UserOrderByWithRelationInput
+  userId: SortOrder
+}
+
+enum PhotoScalarFieldEnum {
+  caption
+  createdAt
+  file
+  id
+  photoOutputUrl
+  updatedAt
+  userId
+}
+
+input PhotoScalarWhereInput {
+  AND: [PhotoScalarWhereInput!]
+  NOT: [PhotoScalarWhereInput!]
+  OR: [PhotoScalarWhereInput!]
+  caption: StringNullableFilter
+  file: StringNullableFilter
+  id: StringFilter
+  photoOutputUrl: StringNullableFilter
+  userId: StringFilter
+}
+
+input PhotoUpdateManyMutationInput {
+  caption: String
+  file: Upload
+  id: UUID
+  photoOutputUrl: String
+}
+
+input PhotoUpdateManyWithWhereWithoutUserInput {
+  data: PhotoUpdateManyMutationInput!
+  where: PhotoScalarWhereInput!
+}
+
+input PhotoUpdateManyWithoutUserInput {
+  connect: [PhotoWhereUniqueInput!]
+  connectOrCreate: [PhotoCreateOrConnectWithoutUserInput!]
+  create: [PhotoCreateWithoutUserInput!]
+  createMany: PhotoCreateManyUserInputEnvelope
+  delete: [PhotoWhereUniqueInput!]
+  deleteMany: [PhotoScalarWhereInput!]
+  disconnect: [PhotoWhereUniqueInput!]
+  set: [PhotoWhereUniqueInput!]
+  update: [PhotoUpdateWithWhereUniqueWithoutUserInput!]
+  updateMany: [PhotoUpdateManyWithWhereWithoutUserInput!]
+  upsert: [PhotoUpsertWithWhereUniqueWithoutUserInput!]
+}
+
+input PhotoUpdateWithWhereUniqueWithoutUserInput {
+  data: PhotoUpdateWithoutUserInput!
+  where: PhotoWhereUniqueInput!
+}
+
+input PhotoUpdateWithoutUserInput {
+  caption: String
+  file: Upload
+  hashtags: HashtagUpdateManyWithoutPhotosInput
+  id: UUID
+  photoOutputUrl: String
+}
+
+input PhotoUpsertWithWhereUniqueWithoutUserInput {
+  create: PhotoCreateWithoutUserInput!
+  update: PhotoUpdateWithoutUserInput!
+  where: PhotoWhereUniqueInput!
+}
+
+input PhotoWhereInput {
+  AND: [PhotoWhereInput!]
+  NOT: [PhotoWhereInput!]
+  OR: [PhotoWhereInput!]
+  caption: StringNullableFilter
+  file: StringNullableFilter
+  hashtags: HashtagListRelationFilter
+  id: StringFilter
+  photoOutputUrl: StringNullableFilter
+  user: UserRelationFilter
+  userId: StringFilter
+}
+
+input PhotoWhereUniqueInput {
+  id: UUID
+}
+
 type Query {
+  photos(cursor: PhotoWhereUniqueInput, distinct: [PhotoScalarFieldEnum!], orderBy: [PhotoOrderByWithRelationInput!], skip: Int, take: Int, where: PhotoWhereInput): [Photo!]!
   searchUser(searchUserInput: SearchUserInput!): [User!]!
+  seePhoto(seePhotoInput: SeePhotoInput!): SeePhotoOutput!
   seeProfile(seeProfileInput: SeeProfileInput!): SeeProfileOutput!
   users(cursor: UserWhereUniqueInput, distinct: [UserScalarFieldEnum!], orderBy: [UserOrderByWithRelationInput!], skip: Int, take: Int, where: UserWhereInput): [User!]!
 }
@@ -130,6 +453,22 @@ type SeeFollowingOutput {
   ok: Boolean!
 }
 
+input SeePhotoInput {
+  id: UUID!
+}
+
+type SeePhotoOutput {
+  caption: String
+  createdAt: DateTime
+  file: String
+  hashtags: [Hashtag!]!
+  id: UUID!
+  photoOutputUrl: String
+  updatedAt: DateTime
+  user: User!
+  userId: UUID
+}
+
 input SeeProfileInput {
   username: String!
 }
@@ -142,13 +481,12 @@ type SeeProfileOutput {
   createdAt: DateTime!
   email: EmailAddress!
   firstName: String!
-  followers: [User!]
-  following: [User!]
   id: UUID!
   isEmailVerified: Boolean!
   isFollowing: Boolean!
   isMe: Boolean!
   lastName: String
+  photos: [Photo!]
   refreshToken: String
   totalFollowers: Int!
   totalFollowing: Int!
@@ -216,11 +554,10 @@ type User {
   createdAt: DateTime!
   email: EmailAddress!
   firstName: String!
-  followers: [User!]
-  following: [User!]
   id: UUID!
   isEmailVerified: Boolean!
   lastName: String
+  photos: [Photo!]
   refreshToken: String
   updatedAt: DateTime!
   username: String!
@@ -229,6 +566,7 @@ type User {
 type UserCount {
   followers: Int!
   following: Int!
+  photos: Int!
 }
 
 type UserCountAggregate {
@@ -253,66 +591,11 @@ input UserCreateInput {
   bio: String
   email: EmailAddress!
   firstName: String!
-  followers: UserCreateNestedManyWithoutFollowingInput
-  following: UserCreateNestedManyWithoutFollowersInput
   isEmailVerified: Boolean
   lastName: String
   password: String!
+  photos: PhotoCreateNestedManyWithoutUserInput
   username: String!
-}
-
-input UserCreateNestedManyWithoutFollowersInput {
-  connect: [UserWhereUniqueInput!]
-  connectOrCreate: [UserCreateOrConnectWithoutFollowersInput!]
-  create: [UserCreateWithoutFollowersInput!]
-}
-
-input UserCreateNestedManyWithoutFollowingInput {
-  connect: [UserWhereUniqueInput!]
-  connectOrCreate: [UserCreateOrConnectWithoutFollowingInput!]
-  create: [UserCreateWithoutFollowingInput!]
-}
-
-input UserCreateOrConnectWithoutFollowersInput {
-  create: UserCreateWithoutFollowersInput!
-  where: UserWhereUniqueInput!
-}
-
-input UserCreateOrConnectWithoutFollowingInput {
-  create: UserCreateWithoutFollowingInput!
-  where: UserWhereUniqueInput!
-}
-
-input UserCreateWithoutFollowersInput {
-  avatar: Upload
-  avatarOutputUrl: String
-  bio: String
-  email: EmailAddress!
-  firstName: String!
-  following: UserCreateNestedManyWithoutFollowersInput
-  isEmailVerified: Boolean
-  lastName: String
-  password: String!
-  username: String!
-}
-
-input UserCreateWithoutFollowingInput {
-  avatar: Upload
-  avatarOutputUrl: String
-  bio: String
-  email: EmailAddress!
-  firstName: String!
-  followers: UserCreateNestedManyWithoutFollowingInput
-  isEmailVerified: Boolean
-  lastName: String
-  password: String!
-  username: String!
-}
-
-input UserListRelationFilter {
-  every: UserWhereInput
-  none: UserWhereInput
-  some: UserWhereInput
 }
 
 type UserMaxAggregate {
@@ -345,22 +628,22 @@ type UserMinAggregate {
   username: String
 }
 
-input UserOrderByRelationAggregateInput {
-  _count: SortOrder
-}
-
 input UserOrderByWithRelationInput {
   avatar: SortOrder
   avatarOutputUrl: SortOrder
   bio: SortOrder
   email: SortOrder
   firstName: SortOrder
-  followers: UserOrderByRelationAggregateInput
-  following: UserOrderByRelationAggregateInput
   isEmailVerified: SortOrder
   lastName: SortOrder
   password: SortOrder
+  photos: PhotoOrderByRelationAggregateInput
   username: SortOrder
+}
+
+input UserRelationFilter {
+  is: UserWhereInput
+  isNot: UserWhereInput
 }
 
 enum UserScalarFieldEnum {
@@ -379,129 +662,17 @@ enum UserScalarFieldEnum {
   username
 }
 
-input UserScalarWhereInput {
-  AND: [UserScalarWhereInput!]
-  NOT: [UserScalarWhereInput!]
-  OR: [UserScalarWhereInput!]
-  avatar: StringNullableFilter
-  avatarOutputUrl: StringNullableFilter
-  bio: StringNullableFilter
-  email: StringFilter
-  firstName: StringFilter
-  isEmailVerified: BoolFilter
-  lastName: StringNullableFilter
-  password: StringFilter
-  username: StringFilter
-}
-
 input UserUpdateInput {
   avatar: Upload
   avatarOutputUrl: String
   bio: String
   email: EmailAddress
   firstName: String
-  followers: UserUpdateManyWithoutFollowingInput
-  following: UserUpdateManyWithoutFollowersInput
   isEmailVerified: Boolean
   lastName: String
   password: String
+  photos: PhotoUpdateManyWithoutUserInput
   username: String
-}
-
-input UserUpdateManyMutationInput {
-  avatar: Upload
-  avatarOutputUrl: String
-  bio: String
-  email: EmailAddress
-  firstName: String
-  isEmailVerified: Boolean
-  lastName: String
-  password: String
-  username: String
-}
-
-input UserUpdateManyWithWhereWithoutFollowersInput {
-  data: UserUpdateManyMutationInput!
-  where: UserScalarWhereInput!
-}
-
-input UserUpdateManyWithWhereWithoutFollowingInput {
-  data: UserUpdateManyMutationInput!
-  where: UserScalarWhereInput!
-}
-
-input UserUpdateManyWithoutFollowersInput {
-  connect: [UserWhereUniqueInput!]
-  connectOrCreate: [UserCreateOrConnectWithoutFollowersInput!]
-  create: [UserCreateWithoutFollowersInput!]
-  delete: [UserWhereUniqueInput!]
-  deleteMany: [UserScalarWhereInput!]
-  disconnect: [UserWhereUniqueInput!]
-  set: [UserWhereUniqueInput!]
-  update: [UserUpdateWithWhereUniqueWithoutFollowersInput!]
-  updateMany: [UserUpdateManyWithWhereWithoutFollowersInput!]
-  upsert: [UserUpsertWithWhereUniqueWithoutFollowersInput!]
-}
-
-input UserUpdateManyWithoutFollowingInput {
-  connect: [UserWhereUniqueInput!]
-  connectOrCreate: [UserCreateOrConnectWithoutFollowingInput!]
-  create: [UserCreateWithoutFollowingInput!]
-  delete: [UserWhereUniqueInput!]
-  deleteMany: [UserScalarWhereInput!]
-  disconnect: [UserWhereUniqueInput!]
-  set: [UserWhereUniqueInput!]
-  update: [UserUpdateWithWhereUniqueWithoutFollowingInput!]
-  updateMany: [UserUpdateManyWithWhereWithoutFollowingInput!]
-  upsert: [UserUpsertWithWhereUniqueWithoutFollowingInput!]
-}
-
-input UserUpdateWithWhereUniqueWithoutFollowersInput {
-  data: UserUpdateWithoutFollowersInput!
-  where: UserWhereUniqueInput!
-}
-
-input UserUpdateWithWhereUniqueWithoutFollowingInput {
-  data: UserUpdateWithoutFollowingInput!
-  where: UserWhereUniqueInput!
-}
-
-input UserUpdateWithoutFollowersInput {
-  avatar: Upload
-  avatarOutputUrl: String
-  bio: String
-  email: EmailAddress
-  firstName: String
-  following: UserUpdateManyWithoutFollowersInput
-  isEmailVerified: Boolean
-  lastName: String
-  password: String
-  username: String
-}
-
-input UserUpdateWithoutFollowingInput {
-  avatar: Upload
-  avatarOutputUrl: String
-  bio: String
-  email: EmailAddress
-  firstName: String
-  followers: UserUpdateManyWithoutFollowingInput
-  isEmailVerified: Boolean
-  lastName: String
-  password: String
-  username: String
-}
-
-input UserUpsertWithWhereUniqueWithoutFollowersInput {
-  create: UserCreateWithoutFollowersInput!
-  update: UserUpdateWithoutFollowersInput!
-  where: UserWhereUniqueInput!
-}
-
-input UserUpsertWithWhereUniqueWithoutFollowingInput {
-  create: UserCreateWithoutFollowingInput!
-  update: UserUpdateWithoutFollowingInput!
-  where: UserWhereUniqueInput!
 }
 
 input UserWhereInput {
@@ -513,11 +684,10 @@ input UserWhereInput {
   bio: StringNullableFilter
   email: StringFilter
   firstName: StringFilter
-  followers: UserListRelationFilter
-  following: UserListRelationFilter
   isEmailVerified: BoolFilter
   lastName: StringNullableFilter
   password: StringFilter
+  photos: PhotoListRelationFilter
   username: StringFilter
 }
 

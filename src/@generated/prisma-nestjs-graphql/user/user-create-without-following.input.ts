@@ -2,6 +2,7 @@ import { Field, InputType, HideField } from '@nestjs/graphql';
 import * as Scalars from 'graphql-scalars';
 import * as Upload from 'graphql-upload';
 import { UserCreateNestedManyWithoutFollowingInput } from './user-create-nested-many-without-following.input';
+import { PhotoCreateNestedManyWithoutUserInput } from '../photo/photo-create-nested-many-without-user.input';
 
 @InputType()
 export class UserCreateWithoutFollowingInput {
@@ -38,8 +39,11 @@ export class UserCreateWithoutFollowingInput {
   @Field(() => String, { nullable: true })
   avatarOutputUrl?: string;
 
-  @Field(() => UserCreateNestedManyWithoutFollowingInput, { nullable: true })
+  @HideField()
   followers?: UserCreateNestedManyWithoutFollowingInput;
+
+  @Field(() => PhotoCreateNestedManyWithoutUserInput, { nullable: true })
+  photos?: PhotoCreateNestedManyWithoutUserInput;
 
   @HideField()
   createdAt?: Date | string;

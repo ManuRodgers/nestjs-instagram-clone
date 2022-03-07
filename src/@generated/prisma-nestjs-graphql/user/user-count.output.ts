@@ -7,4 +7,7 @@ export class UserCount {
 
   @Field(() => Int, { nullable: false })
   followers?: number;
+
+  @Field(() => Int, { nullable: false })
+  photos?: number;
 }

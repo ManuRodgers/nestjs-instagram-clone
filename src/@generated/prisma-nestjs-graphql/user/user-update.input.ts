@@ -3,6 +3,7 @@ import * as Scalars from 'graphql-scalars';
 import * as Upload from 'graphql-upload';
 import { UserUpdateManyWithoutFollowersInput } from './user-update-many-without-followers.input';
 import { UserUpdateManyWithoutFollowingInput } from './user-update-many-without-following.input';
+import { PhotoUpdateManyWithoutUserInput } from '../photo/photo-update-many-without-user.input';
 
 @InputType()
 export class UserUpdateInput {
@@ -39,11 +40,14 @@ export class UserUpdateInput {
   @Field(() => String, { nullable: true })
   avatarOutputUrl?: string;
 
-  @Field(() => UserUpdateManyWithoutFollowersInput, { nullable: true })
+  @HideField()
   following?: UserUpdateManyWithoutFollowersInput;
 
-  @Field(() => UserUpdateManyWithoutFollowingInput, { nullable: true })
+  @HideField()
   followers?: UserUpdateManyWithoutFollowingInput;
+
+  @Field(() => PhotoUpdateManyWithoutUserInput, { nullable: true })
+  photos?: PhotoUpdateManyWithoutUserInput;
 
   @HideField()
   createdAt?: Date | string;

@@ -3,6 +3,7 @@ import * as Scalars from 'graphql-scalars';
 import * as Upload from 'graphql-upload';
 import { UserUncheckedUpdateManyWithoutFollowersInput } from './user-unchecked-update-many-without-followers.input';
 import { UserUncheckedUpdateManyWithoutFollowingInput } from './user-unchecked-update-many-without-following.input';
+import { PhotoUncheckedUpdateManyWithoutUserInput } from '../photo/photo-unchecked-update-many-without-user.input';
 
 @InputType()
 export class UserUncheckedUpdateInput {
@@ -39,11 +40,14 @@ export class UserUncheckedUpdateInput {
   @Field(() => String, { nullable: true })
   avatarOutputUrl?: string;
 
-  @Field(() => UserUncheckedUpdateManyWithoutFollowersInput, { nullable: true })
+  @HideField()
   following?: UserUncheckedUpdateManyWithoutFollowersInput;
 
-  @Field(() => UserUncheckedUpdateManyWithoutFollowingInput, { nullable: true })
+  @HideField()
   followers?: UserUncheckedUpdateManyWithoutFollowingInput;
+
+  @Field(() => PhotoUncheckedUpdateManyWithoutUserInput, { nullable: true })
+  photos?: PhotoUncheckedUpdateManyWithoutUserInput;
 
   @HideField()
   createdAt?: Date | string;

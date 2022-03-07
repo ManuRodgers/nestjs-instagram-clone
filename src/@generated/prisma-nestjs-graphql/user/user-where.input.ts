@@ -3,6 +3,7 @@ import { StringFilter } from '../prisma/string-filter.input';
 import { StringNullableFilter } from '../prisma/string-nullable-filter.input';
 import { BoolFilter } from '../prisma/bool-filter.input';
 import { UserListRelationFilter } from './user-list-relation-filter.input';
+import { PhotoListRelationFilter } from '../photo/photo-list-relation-filter.input';
 import { DateTimeFilter } from '../prisma/date-time-filter.input';
 
 @InputType()
@@ -49,11 +50,14 @@ export class UserWhereInput {
   @Field(() => StringNullableFilter, { nullable: true })
   avatarOutputUrl?: StringNullableFilter;
 
-  @Field(() => UserListRelationFilter, { nullable: true })
+  @HideField()
   following?: UserListRelationFilter;
 
-  @Field(() => UserListRelationFilter, { nullable: true })
+  @HideField()
   followers?: UserListRelationFilter;
+
+  @Field(() => PhotoListRelationFilter, { nullable: true })
+  photos?: PhotoListRelationFilter;
 
   @HideField()
   createdAt?: DateTimeFilter;
