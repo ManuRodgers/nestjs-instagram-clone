@@ -411,6 +411,7 @@ input PhotoWhereUniqueInput {
 type Query {
   photos(cursor: PhotoWhereUniqueInput, distinct: [PhotoScalarFieldEnum!], orderBy: [PhotoOrderByWithRelationInput!], skip: Int, take: Int, where: PhotoWhereInput): [Photo!]!
   searchUser(searchUserInput: SearchUserInput!): [User!]!
+  seeHashtag(seeHashtagInput: SeeHashtagInput!): SeeHashtagOutput!
   seePhoto(seePhotoInput: SeePhotoInput!): SeePhotoOutput!
   seeProfile(seeProfileInput: SeeProfileInput!): SeeProfileOutput!
   users(cursor: UserWhereUniqueInput, distinct: [UserScalarFieldEnum!], orderBy: [UserOrderByWithRelationInput!], skip: Int, take: Int, where: UserWhereInput): [User!]!
@@ -451,6 +452,19 @@ type SeeFollowingOutput {
   following: [User!]
   hasMore: Boolean
   ok: Boolean!
+}
+
+input SeeHashtagInput {
+  hashtag: String!
+}
+
+type SeeHashtagOutput {
+  createdAt: DateTime
+  hashtag: String!
+  id: UUID!
+  photos(pageNumber: Int!, pageSize: Int = 5): [Photo!]!
+  totalPhotos: Int!
+  updatedAt: DateTime
 }
 
 input SeePhotoInput {

@@ -1,7 +1,7 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { GraphQLUUID } from 'graphql-scalars';
-import { User } from 'src/@generated/prisma-nestjs-graphql/user';
 import { Hashtag } from 'src/@generated/prisma-nestjs-graphql/hashtag';
+import { User } from 'src/@generated/prisma-nestjs-graphql/user';
 
 @ObjectType()
 export class SeePhotoOutput {

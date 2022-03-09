@@ -10,6 +10,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { GraphqlJwtAuthGuard } from './auth/guards/graphql-jwt-auth.guard';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { PhotosModule } from './photos/photos.module';
+import { HashtagsModule } from './hashtags/hashtags.module';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { PhotosModule } from './photos/photos.module';
     UsersModule,
     AuthModule,
     PhotosModule,
+    HashtagsModule,
   ],
   providers: [{ provide: APP_GUARD, useClass: GraphqlJwtAuthGuard }],
 })
